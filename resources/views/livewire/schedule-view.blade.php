@@ -125,8 +125,7 @@
                         </h3>
                     </div>
                     <div class="card-body mb-2">
-                        Maps integration is in development
-                
+                        Maps integration is under development
                     </div>
                 </div>
             </div>
