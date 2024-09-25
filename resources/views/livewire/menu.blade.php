@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="info">
-            <a href="/dashboard" class="d-block">{{ auth()->user()->name }}</a>
+            <a href="/profile" class="d-block">{{ auth()->user()->name }}</a>
         </div>
     </div>
 
@@ -27,19 +27,27 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          @if (auth()->user()->admin)   
           <li class="nav-item">
-            <a href="/jobs" class="nav-link {{ request()->routeIs('jobs') ? 'active' : ''}}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+            <a href="/dashboard" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : ''}}">
+              <i class="nav-icon fas fa-home"></i>
               <p>
-                Jobs
+                Dashboard
               </p>
             </a>
           </li>
+          @if (auth()->user()->admin)   
+            <li class="nav-item">
+              <a href="/jobs" class="nav-link {{ request()->routeIs('jobs') ? 'active' : ''}}">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>
+                  Jobs
+                </p>
+              </a>
+            </li>
           @endif
           <li class="nav-item">
             <a href="/schedule" class="nav-link {{ request()->routeIs('schedule') ? 'active' : ''}}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Schedule
               </p>
@@ -47,7 +55,7 @@
           </li>
           <li class="nav-item">
             <a href="/job-list" class="nav-link {{ request()->routeIs('job_list') ? 'active' : ''}}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-file-alt"></i>
               <p>
                 Submissions
               </p>
@@ -55,7 +63,7 @@
           </li>
           <li class="nav-item">
             <a href="/tickets" class="nav-link {{ request()->routeIs('tickets') ? 'active' : ''}}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-ticket-alt"></i>
               <p>
                 Tickets
               </p>
