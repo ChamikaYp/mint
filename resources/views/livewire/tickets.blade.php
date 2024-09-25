@@ -107,38 +107,40 @@
                     <h4>Tickets List</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Job</th>
-                                <th style="min-width: 100px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($tickets as $ticket)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
                                 <tr>
-                                    <td>{{ $ticket->name }}</td>
-                                    <td>{{ Str::words($ticket->description, 20, '...') }}</td>
-                                    <td>{{ $ticket->status }}</td>
-                                    <td>{{ $ticket->job->name }}</td>
-                                    <td style="min-width: 150px;">
-                                        <a href="{{ url('tickets/' . $ticket->id) }}" target="_blank" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <button wire:click="edit({{ $ticket->id }})" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button wire:click="confirmDelete({{ $ticket->id }})" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Job</th>
+                                    <th style="min-width: 100px;">Actions</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach($tickets as $ticket)
+                                    <tr>
+                                        <td>{{ $ticket->name }}</td>
+                                        <td>{{ Str::words($ticket->description, 20, '...') }}</td>
+                                        <td>{{ $ticket->status }}</td>
+                                        <td>{{ $ticket->job->name }}</td>
+                                        <td style="min-width: 150px;">
+                                            <a href="{{ url('tickets/' . $ticket->id) }}" target="_blank" class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <button wire:click="edit({{ $ticket->id }})" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="confirmDelete({{ $ticket->id }})" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

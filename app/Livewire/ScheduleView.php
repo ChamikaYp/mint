@@ -24,9 +24,6 @@ class ScheduleView extends Component
 
     public function mount() 
     {
-        $this->due_jobs = Job::all();
-        $this->due_jobs_array = Job::all()->toArray();
-        $this->scheduled_jobs = Job::all();
     }
 
     public function scheduleJob($jobId)
@@ -54,6 +51,29 @@ class ScheduleView extends Component
 
     public function render()
     {
+            // Get the start of the week (Monday) based on the selected date
+        $startOfWeek = Carbon::parse($this->date)->startOfWeek(Carbon::MONDAY);
+        
+        // Prepare an array for the week (Monday to Sunday)
+        $weekDays = [];
+        for ($i = 0; $i < 7; $i++) {
+            $weekDays[] = $startOfWeek->copy()->addDays($i);
+        }
+
+        // Get all schedules for the week
+        $scheduledJobs = Schedule::with('job')
+            ->whereBetween('scheduled_date', [$startOfWeek, $startOfWeek->copy()->endOfWeek()])
+            ->get();
+
+        // Organize jobs by day
+        $weeklySchedule = [];
+        foreach ($weekDays as $day) {
+            $scheduledForDay = $scheduledJobs->filter(function ($schedule) use ($day) {
+                return Carbon::parse($schedule->scheduled_date)->isSameDay($day);
+            });
+            $weeklySchedule[$day->format('Y-m-d')] = $scheduledForDay;
+        }
+
         $scheduledJobs = Schedule::with('job')
             ->whereDate('scheduled_date', $this->date)
             ->get();
@@ -73,15 +93,23 @@ class ScheduleView extends Component
                 'job' => $job->name,
                 'status' => $status['status'],
                 'overdueWeeks' => $status['overdueWeeks'] ?? 'N/A',
-                'scheduledDate' => $status['scheduledDate'] ?? 'N/A',
+                // 'scheduledDate' => $status['scheduledDate'] ?? 'N/A',
+                'scheduledDate' => $status['scheduledDate'] ? Carbon::parse($status['scheduledDate']) : 'N/A',
                 'type' => $status['type'] ?? 4,
+                'last_completed' => $status['last_completed'] ? Carbon::createFromFormat('d/m/Y H:i', $status['last_completed'])->format('d/m/Y') : 'N/A',
             ];
         }
+
+        usort($jobStatuses, function ($a, $b) {
+            return $b['type'] - $a['type'];  // Sorts by type in descending order
+        });
 
         return view('livewire.schedule-view', [
             'filteredJobs' => $filteredJobs,
             'scheduledJobs' => $scheduledJobs,
             'jobStatuses' => $jobStatuses,
+            'weekDays' => $weekDays,
+            'weeklySchedule' => $weeklySchedule,
         ]);
     }
 

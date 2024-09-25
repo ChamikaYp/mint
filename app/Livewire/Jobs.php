@@ -47,7 +47,7 @@ class Jobs extends Component
         'location_link' => 'nullable|url',
         'scope' => 'nullable|string',
         'base_price' => 'required|numeric',
-        'frequency' => 'nullable|integer|min:1',
+        'frequency' => 'nullable|integer|min:0',
         'active' => 'boolean',
 
         // Validation rules for job scope fields

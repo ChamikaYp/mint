@@ -52,8 +52,11 @@
                                     <div class="row m-3">
                                         <div class="">
                                             @foreach ($comment->images as $image)
-                                                <a href="{{ Storage::url($image->path) }}" target="_blank" rel="noopener noreferrer">
+                                                {{-- <a href="{{ Storage::url($image->path) }}" target="_blank" rel="noopener noreferrer">
                                                     <img src="{{ Storage::url($image->path) }}" alt="Comment Image" class="img-thumbnail ml-1 mr-1" width="300">
+                                                </a> --}}
+                                                <a href="{{ Storage::disk('comments')->url($image->path) }}" target="_blank">
+                                                    <img src="{{ Storage::disk('comments')->url($image->path) }}" alt="Comment Image" class="img-thumbnail ml-1 mr-1" width="300">
                                                 </a>
                                             @endforeach
                                         </div>
@@ -80,8 +83,17 @@
                                             <label for="imageUpload">Upload Images</label>
                                             <input type="file" class="form-control" wire:model="imageUploads" multiple> <!-- Allow multiple files -->
                                             @error('imageUploads.*') <span class="text-danger">{{ $message }}</span> @enderror
-                                        </div>                                        
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                            
+                                            <!-- Show a loading message or spinner while uploading -->
+                                            <div wire:loading wire:target="imageUploads">
+                                                <p class="text-warning">Uploading images, please wait...</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Disable the button while loading -->
+                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="imageUploads">
+                                            Submit
+                                        </button>
                                     </form>
                                 </div>
                             </div>

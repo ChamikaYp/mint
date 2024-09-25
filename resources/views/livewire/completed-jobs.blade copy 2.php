@@ -1,18 +1,12 @@
 <div class="content-wrapper">
     <section class="content-header">
-        <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-            <h1>Job Submissions</h1>
-            </div>
-            <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Simple Tables</li>
-            </ol>
-            </div>
-        </div>
-        </div>
+      <div class="container-fluid">
+          <div class="row mb-2">
+              <div class="col-sm-6">
+                  <h1>Job Submissions</h1>
+              </div>
+          </div>
+      </div><!-- /.container-fluid -->
     </section>
     <section class="content">
         <div class="container-fluid">
@@ -38,39 +32,78 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <div class="table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label for="filterDate">Job</label>
+                  <input wire:model.live="filterJob" type="text" class="form-control" placeholder="Filter by Job">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="filterDate">Date</label>
+                  <input wire:model.live="filterDate" id="filterDate" type="date" class="form-control">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="filterDate">Invoiced Status</label>
+                  <select wire:model.live="filterInvoiced" class="form-control">
+                      <option value="">Filter by Invoiced Status</option>
+                      <option value="1">Invoiced</option>
+                      <option value="0">Not Invoiced</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <table id="example2" class="table table-bordered table-striped dtr-inline">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Job</th>
-                      <th>Date</th>
-                      @if ( $auth_user->admin ) <th>Invoiced</th> @endif
-                      <th>Actions</th>
+                        <th>#</th>
+                        <th>Job</th>
+                        <th wire:click.prevent="sortBy('completed_on')" style="cursor: pointer; position: relative;">
+                            Completed On
+                            <span class="sort-icons" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: inline-flex; gap: 1px;">
+                                <i class="fas fa-arrow-up {{ $sortField === 'completed_on' && $sortDirection === 'asc' ? 'text-black' : '' }}" style="font-size: 0.75rem; color: {{ $sortField === 'completed_on' && $sortDirection === 'asc' ? 'black' : '#d3d3d3' }};"></i>
+                                <i class="fas fa-arrow-down {{ $sortField === 'completed_on' && $sortDirection === 'desc' ? 'text-black' : '' }}" style="font-size: 0.75rem; color: {{ $sortField === 'completed_on' && $sortDirection === 'desc' ? 'black' : '#d3d3d3' }};"></i>
+                            </span>
+                        </th>
+                        <th wire:click.prevent="sortBy('submitted_on')" style="cursor: pointer; position: relative;">
+                            Submitted On
+                            <span class="sort-icons" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: inline-flex; gap: 1px;">
+                                <i class="fas fa-arrow-up {{ $sortField === 'submitted_on' && $sortDirection === 'asc' ? 'text-black' : '' }}" style="font-size: 0.75rem; color: {{ $sortField === 'submitted_on' && $sortDirection === 'asc' ? 'black' : '#d3d3d3' }};"></i>
+                                <i class="fas fa-arrow-down {{ $sortField === 'submitted_on' && $sortDirection === 'desc' ? 'text-black' : '' }}" style="font-size: 0.75rem; color: {{ $sortField === 'submitted_on' && $sortDirection === 'desc' ? 'black' : '#d3d3d3' }};"></i>
+                            </span>
+                        </th>
+                        @if ($auth_user->admin)
+                            <th>Invoiced</th>
+                        @endif
+                        <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($completed_jobs as $completed_job)
-                      <tr>
-                        <td>{{$completed_job->id}}</td>
-                        <td>{{$completed_job->job->name}}</td>
-                        <td>{{$completed_job->getDateAttribute()}}</td>
-                        @if ( $auth_user->admin ) <td><input {{$completed_job->invoiced == 0 ? "" : "checked"}} wire:click="toggleInvoice({{$completed_job->id}})" type="checkbox"></td> @endif
-                        <td>
-                          <button wire:click="viewClick({{$completed_job->id}})" class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i>
-                          </button>
-                          <button wire:click="editClick({{$completed_job->id}})" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                          <button data-toggle="modal" data-target="#deleteConfirmationModal" data-id="{{$completed_job->id}}" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    @endforeach
+                    @forelse ($completed_jobs as $completed_job)
+                        <tr>
+                            {{-- <td>{{ $completed_job->id }}</td> --}}
+                            <td>{{ ($completed_jobs->currentPage() - 1) * $completed_jobs->perPage() + $loop->iteration }}</td>
+                            <td>{{ $completed_job->job->name }}</td>
+                            <td>{{ $completed_job->getDateAttribute() }}</td>
+                            <td>{{ $completed_job->created_at->format('d/m/Y') }}</td> <!-- Format the created_at date -->
+                            @if ($auth_user->admin)
+                                <td><input {{ $completed_job->invoiced == 0 ? "" : "checked" }} wire:click="toggleInvoice({{ $completed_job->id }})" type="checkbox"></td>
+                            @endif
+                            <td>
+                                <button wire:click="viewClick({{ $completed_job->id }})" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                                <button wire:click="editClick({{ $completed_job->id }})" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                                <button wire:click="deleteClick({{ $completed_job->id }})" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    @empty
+                                  <tr>
+                                      <td colspan="7">No jobs found.</td>
+                                  </tr>
+                    @endforelse
                   </tbody>
                 </table>
+              </div>
+              <div class="d-flex justify-content-center">
+                {{-- {{ $completed_jobs->links() }} --}}
+                {{ $completed_jobs->links('vendor.pagination.adminlte') }}
               </div>
             </div>
             <!-- /.card-body -->
@@ -105,7 +138,14 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                          <div id="startJobScope"></div>
+                        <div class="form-group">
+                          <label>Scope</label>
+                          <textarea id="startJobScope" class="form-control" rows="10" placeholder="" disabled></textarea>
+                        </div>
+                        <div class="row" id="tickets">
+                          
+                      </div>
+                          {{-- {{-- <div id="startJobScope"></div> --}}
                         </div>
                     </div>
                 </div>
@@ -123,16 +163,16 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="cancelDelete">
               <span aria-hidden="true">&times;</span>
-            </button>
+          </button>
           </div>
           <div class="modal-body">
             Are you sure you want to delete this item?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            <button type="button" wire:click="cancelDelete" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" wire:click="deleteConfirmed" class="btn btn-danger">Delete</button>
           </div>
         </div>
       </div>
@@ -623,25 +663,26 @@
             timer: 3000
         });
 
-        let deleteItemId = null;
+        // let deleteItemId = null;
 
-        $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
-          const button = $(event.relatedTarget); // Button that triggered the modal
-          deleteItemId = button.data('id'); // Extract info from data-* attributes
-        });
+        // $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+        //   const button = $(event.relatedTarget); // Button that triggered the modal
+        //   deleteItemId = button.data('id'); // Extract info from data-* attributes
+        //   console.log(button.data('id'));
+        // });
 
-        document.getElementById('confirmDelete').addEventListener('click', function () {
-          if (deleteItemId !== null) {
-            // Perform the delete action here (e.g., send an AJAX request to the server)
-            console.log('Deleting item with ID:', deleteItemId);
+        // document.getElementById('confirmDelete').addEventListener('click', function () {
+        //   if (deleteItemId !== null) {
+        //     // Perform the delete action here (e.g., send an AJAX request to the server)
+        //     console.log('Deleting item with ID:', deleteItemId);
 
-            Livewire.dispatch('delete-submission', { 
-              completed_job_id: deleteItemId,
-            });
-            // Close the modal
-            $('#deleteConfirmationModal').modal('hide');
-          }
-        });
+        //     Livewire.dispatch('delete-submission', { 
+        //       completed_job_id: deleteItemId,
+        //     });
+        //     // Close the modal
+        //     $('#deleteConfirmationModal').modal('hide');
+        //   }
+        // });
 
         function restrictInputToNumbers(selector) {
             $(selector).on('input', function() {
@@ -737,7 +778,7 @@
                 $('#jobModal').modal('hide');
                 Toast.fire({
                   icon: 'success',
-                  title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                  title: 'Job Submitted'
                 })
                 updatePrice();
               }
@@ -762,6 +803,7 @@
     });
 
     $wire.on('auto-fill-scope', ({ payload }) => {
+      updateField('teamMembers', payload.users);
       updateField('weedSpray', payload.weed_spray == 1 ? true : false);
       updateField('lawnCare', payload.lawn_care == 1 ? true : false);
       updateField('trimming', payload.trimming == 1 ? true : false);
@@ -778,6 +820,8 @@
       updateField('clearingDrainageGate', payload.clearing_drainage_gate == 1 ? true : false);
       updateField('vacuumAndMopLaundry', payload.vacuum_and_mop_laundry == 1 ? true : false);
       updateField('removeWasteLaundry', payload.remove_waste_laundry == 1 ? true : false);
+
+      // console.log(payload.users);
     });
 
     let images;
@@ -1014,12 +1058,62 @@
         document.body.removeChild(downloadLink);
     }
 
+    function updateTickets(tickets) {
+    const ticketsContainer = document.getElementById('tickets');
+    ticketsContainer.innerHTML = '';
+
+    tickets.forEach(ticket => {
+        let badgeClass = '';
+        switch(ticket.status) {
+            case 'Open':
+                badgeClass = 'bg-success';
+                break;
+            case 'Pending':
+                badgeClass = 'bg-warning';
+                break;
+            case 'On hold':
+                badgeClass = 'bg-primary';
+                break;
+            case 'Solved':
+                badgeClass = 'bg-info';
+                break;
+            case 'Closed':
+                badgeClass = 'bg-danger';
+                break;
+            default:
+                badgeClass = 'bg-secondary';
+        }
+
+        // Dynamically create the ticket link
+        const ticketLink = `/tickets/${ticket.id}`;
+
+        const cardHTML = `
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">${ticket.name}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Status: <span class="badge ${badgeClass}">${ticket.status}</span></p>
+                        <a target="_blank" href="${ticketLink}" class="btn btn-primary btn-sm">View Ticket</a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        ticketsContainer.innerHTML += cardHTML;
+    });
+    }
+
+
     Livewire.on('show-start-scope', ({ payload }) => {
-      console.log(payload.scope);
+      console.log(payload.tickets);
       $('#startJobScope').html(payload.scope.replace(/\n/g, '<br>'));
+      updateTickets(payload.tickets);
     });
 
     Livewire.on('show-job', ({ payload }) => {
+      initializeImageUpload();
       payload.jobImages.forEach(url => {
           createImagePreview(url, true);
       });
@@ -1060,6 +1154,7 @@
 
     Livewire.on('edit-job', ({ payload }) => {
       editJobID = payload.job.id;
+      initializeImageUpload();
       payload.jobImages.forEach(url => {
           createImagePreview(url, false);
       });
@@ -1098,6 +1193,18 @@
       $("#saveChangesButton").show();
       $("#saveChangesButton").html("Save");
       $('#jobModal').modal('show');
+    });
+
+    Livewire.on('show-delete-confirmation', () => {
+        $('#deleteConfirmationModal').modal('show');
+    });
+
+    Livewire.on('deleted', () => {
+        $('#deleteConfirmationModal').modal('hide');
+        Toast.fire({
+          icon: 'success',
+          title: 'Job Deleted'
+        })
     });
 
     $wire.on('show-submit-job', ({ payload }) => {

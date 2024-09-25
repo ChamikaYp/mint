@@ -45,6 +45,7 @@
 
                   <!-- Job Table -->
                   <div class="row">
+                    <div class="table-responsive">
                       <table id="example2" class="table table-bordered table-striped dtr-inline">
                           <thead>
                               <tr>
@@ -78,6 +79,7 @@
                               @endforelse
                           </tbody>
                       </table>
+                    </div>
                   </div>
 
                   <!-- Pagination -->
@@ -166,7 +168,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">Every</span>
                         </div>
-                          <input type="number" min="1" class="form-control" wire:model="frequency" id="frequency" placeholder="Enter Frequency">
+                          <input type="number" min="0" class="form-control" wire:model="frequency" id="frequency" placeholder="Enter Frequency">
                           <div class="input-group-append">
                               <span class="input-group-text">weeks</span>
                           </div>

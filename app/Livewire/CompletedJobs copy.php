@@ -211,8 +211,8 @@ class CompletedJobs extends Component
             $photo_links = [];
 
             foreach ($this->photos as $photo) {
-                $path = $photo->store('', 'uploads');
-                $url = Storage::disk('uploads')->url($path);;
+                $path = $photo->store('photos', 'public');
+                $url = Storage::url($path);
                 $photo_links[] = $url;
             }
 

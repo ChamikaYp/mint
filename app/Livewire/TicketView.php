@@ -39,7 +39,8 @@ class TicketView extends Component
         
         if ($this->imageUploads) {
             foreach ($this->imageUploads as $image) {
-                $imagePath = $image->store('comments', 'public');
+                // $imagePath = $image->store('comments', 'public');
+                $imagePath = $image->store('', 'comments');
                 // Store each image path in the comment (you may want to create a separate CommentImage model)
                 $comment->images()->create(['path' => $imagePath]); // Assuming a CommentImage model
             }
