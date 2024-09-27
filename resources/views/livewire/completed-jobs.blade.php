@@ -81,7 +81,7 @@
                       @forelse ($completed_jobs as $completed_job)
                           <tr>
                               {{-- <td>{{ $completed_job->id }}</td> --}}
-                              <td>{{ ($completed_jobs->currentPage() - 1) * $completed_jobs->perPage() + $loop->iteration }}</td>
+                              <td>{{ ($completed_jobs->total() - ($completed_jobs->currentPage() - 1) * $completed_jobs->perPage()) - ($loop->iteration - 1) }}</td>
                               <td>{{ $completed_job->job->name }}</td>
                               <td>{{ $completed_job->getDateAttribute() }}</td>
                               <td>{{ $completed_job->created_at->format('d/m/Y') }}</td> <!-- Format the created_at date -->
