@@ -249,7 +249,7 @@
                                     </td>
                                     <td>
                                         @if(isset($status['scheduledDate']) && $status['scheduledDate'] == 'N/A')
-                                            <span class="badge bg-danger" style="font-size: 1em;">{{ $status['scheduledDate'] }}</span>
+                                            <span class="badge bg-primary" style="font-size: 1em;">{{ $status['scheduledDate'] }}</span>
                                         @elseif($status['scheduledDate']->lt(\Carbon\Carbon::today()))
                                             <span class="badge bg-danger" style="font-size: 1em;">{{ $status['scheduledDate']->format('d/m/Y') }}</span>
                                         @else
