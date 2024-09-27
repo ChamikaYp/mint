@@ -978,7 +978,7 @@
       $('input[type="file"]').prop('disabled', true);
 
       // Disable textareas
-      $('textarea').prop('disabled', true);
+      $('textarea').not('#startJobScope').prop('disabled', true);
 
       // Disable DateTimePickers
       $('#date').datetimepicker('disable');
@@ -1003,7 +1003,7 @@
       $('input[type="file"]').prop('disabled', false);
 
       // Enable textareas
-      $('textarea').prop('disabled', false);
+      $('textarea').not('#startJobScope').prop('disabled', false);
 
       // Enable DateTimePickers
       $('#date').datetimepicker('enable');
@@ -1133,7 +1133,8 @@
 
   Livewire.on('show-start-scope', ({ payload }) => {
     console.log(payload.tickets);
-    $('#startJobScope').html(payload.scope.replace(/\n/g, '<br>'));
+    // $('#startJobScope').html(payload.scope.replace(/\n/g, '<br>'));
+    $('#startJobScope').val(payload.scope);
     updateTickets(payload.tickets);
   });
 

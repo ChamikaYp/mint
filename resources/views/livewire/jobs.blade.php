@@ -152,7 +152,7 @@
                     <!-- Scope -->
                     <div class="form-group">
                         <label for="scope">Scope</label>
-                        <textarea class="form-control" wire:model="scope" id="scope" placeholder="Enter Scope"></textarea>
+                        <textarea rows="10" class="form-control" wire:model="scope" id="scope" placeholder="Enter Scope"></textarea>
                         @error('scope') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 
