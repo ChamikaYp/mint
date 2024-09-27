@@ -117,13 +117,13 @@ class Job extends Model
             } else {
                 if ($lastSchedule) {
                     if ($now->isSameWeek(Carbon::parse($lastSchedule->scheduled_date))) {
-                        return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate))+1, 'scheduledDate' => $lastSchedule->scheduled_date, 'type' => 1, 'last_completed' => $lastCompletedJob->end_time];
+                        return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate)), 'scheduledDate' => $lastSchedule->scheduled_date, 'type' => 1, 'last_completed' => $lastCompletedJob->end_time];
                     }
                     if ($now->lessThanOrEqualTo(Carbon::parse($lastSchedule->scheduled_date))) {
-                        return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate))+1, 'scheduledDate' => $lastSchedule->scheduled_date, 'type' => 3, 'last_completed' => $lastCompletedJob->end_time];
+                        return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate)), 'scheduledDate' => $lastSchedule->scheduled_date, 'type' => 3, 'last_completed' => $lastCompletedJob->end_time];
                     }
                 }
-                return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate))+1, 'scheduledDate' => null, 'type' => 4, 'last_completed' => $lastCompletedJob->end_time];
+                return ['status' => 'Overdue', 'overdueWeeks' => floor(-1*Carbon::now()->diffInWeeks($nextDueDate)), 'scheduledDate' => null, 'type' => 4, 'last_completed' => $lastCompletedJob->end_time];
             }
         }
     }
