@@ -147,7 +147,7 @@
                             {{-- <button class="btn btn-warning" style="">
                                 <strong>{{ $filteredJob->name }}</strong> 
                             </button> --}}
-                            <button class="btn btn-warning" wire:click="scheduleJob({{ $filteredJob->id }})">
+                            <button class="btn btn-warning mb-1" wire:click="scheduleJob({{ $filteredJob->id }})">
                                 {{ $filteredJob->name }}
                             </button>
                         @endforeach
